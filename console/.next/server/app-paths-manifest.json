@@ -1,0 +1,14 @@
+{
+  "/(dashboard)/credentials/page": "app/(dashboard)/credentials/page.js",
+  "/(dashboard)/projects/[projectId]/page": "app/(dashboard)/projects/[projectId]/page.js",
+  "/(dashboard)/projects/[projectId]/usage/page": "app/(dashboard)/projects/[projectId]/usage/page.js",
+  "/(dashboard)/projects/[projectId]/webhooks/page": "app/(dashboard)/projects/[projectId]/webhooks/page.js",
+  "/(dashboard)/projects/new/page": "app/(dashboard)/projects/new/page.js",
+  "/(dashboard)/projects/page": "app/(dashboard)/projects/page.js",
+  "/(dashboard)/team/page": "app/(dashboard)/team/page.js",
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/login/page": "app/login/page.js",
+  "/page": "app/page.js",
+  "/register/page": "app/register/page.js"
+}

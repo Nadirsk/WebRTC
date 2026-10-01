@@ -1,0 +1,3 @@
+{
+  "/(dashboard)/projects/[projectId]/webhooks/page": "app/(dashboard)/projects/[projectId]/webhooks/page.js"
+}

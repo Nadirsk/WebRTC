@@ -1,0 +1,14 @@
+{
+  "/(dashboard)/credentials/page": "/credentials",
+  "/(dashboard)/projects/[projectId]/page": "/projects/[projectId]",
+  "/(dashboard)/projects/[projectId]/usage/page": "/projects/[projectId]/usage",
+  "/(dashboard)/projects/[projectId]/webhooks/page": "/projects/[projectId]/webhooks",
+  "/(dashboard)/projects/new/page": "/projects/new",
+  "/(dashboard)/projects/page": "/projects",
+  "/(dashboard)/team/page": "/team",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/login/page": "/login",
+  "/page": "/",
+  "/register/page": "/register"
+}

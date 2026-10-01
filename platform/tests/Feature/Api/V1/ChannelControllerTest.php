@@ -33,7 +33,7 @@ class ChannelControllerTest extends TestCase
         ]);
         
         $secret = \Illuminate\Support\Str::random(40);
-        $this->credential->forceFill(['secret' => hash('sha256', $secret)])->save();
+        $this->credential->forceFill(['secret_hash' => hash('sha256', $secret)])->save();
         $this->token = $this->credential->key . ':' . $secret;
         
         Http::preventStrayRequests();

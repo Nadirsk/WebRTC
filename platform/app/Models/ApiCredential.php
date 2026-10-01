@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
@@ -14,6 +15,7 @@ use Illuminate\Support\Str;
  */
 class ApiCredential extends Model
 {
+    use HasFactory;
     protected $fillable = ['organization_id', 'label', 'key', 'secret_hash', 'last_used_at'];
 
     protected $hidden = ['secret_hash'];
