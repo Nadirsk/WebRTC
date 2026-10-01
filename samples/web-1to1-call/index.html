@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Video call sample</title>
+  <link rel="stylesheet" href="../sample.css">
+</head>
+<body>
+<main>
+  <h1>Video call</h1>
+  <form id="start">
+    <label>Call ID <input id="channel" required pattern="[A-Za-z0-9_.\-]{1,64}"></label>
+    <button>Start call</button>
+  </form>
+  <section id="call" hidden>
+    <p id="status"></p>
+    <p class="muted">Invite link: <code id="link"></code></p>
+    <div class="videos">
+      <video id="remote" playsinline autoplay></video>
+      <video id="local" playsinline autoplay muted></video>
+    </div>
+    <p id="quality" class="warn"></p>
+    <p><button id="mic">Mute</button> <button id="cam">Camera off</button> <button id="hangup">Hang up</button></p>
+  </section>
+</main>
+<script type="module" src="main.js"></script>
+</body>
+</html>

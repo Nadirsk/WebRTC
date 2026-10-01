@@ -1,0 +1,110 @@
+export const metadata = { title: 'Client API reference' };
+
+# Client API reference
+
+SDK version 1. The same API in `@nadir-network/web` and `@nadir-network/react-native`.
+
+## `createClient(config)`
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `appId` | `string` | required | Your project's App ID |
+| `allocatorUrl` | `string` | required | The access point, e.g. `https://api.nadir-network.example` |
+| `autoSubscribe` | `boolean` | `true` | Receive every remote track automatically. Set `false` and call `subscribe()` to choose |
+| `forceRelay` | `boolean` | `false` | Send all media through a TURN relay. For testing strict networks |
+| `reconnectTimeoutMs` | `number` | `120000` | How long to keep trying to reconnect before giving up |
+
+## Methods
+
+| Method | Returns | Description |
+|---|---|---|
+| `join({ channel, uid, token, role?, displayName? })` | `Promise<void>` | Join a channel. `role` defaults to the highest role the token allows |
+| `publish(track, appData?)` | `Promise<LocalTrack>` | Send a microphone or camera track. Hosts and speakers only; one audio and one video track |
+| `unpublish(localTrack)` | `Promise<void>` | Stop sending a track (the capture keeps running) |
+| `muteLocalAudio(muted)` / `muteLocalVideo(muted)` | `Promise<void>` | Mute or unmute what you publish |
+| `setRole(role)` | `Promise<void>` | Switch between `host`, `speaker` and `audience`, up to what your token allows |
+| `renewToken(token)` | `Promise<void>` | Replace the token before it expires |
+| `subscribe(uid, kind)` | `Promise<RemoteTrack \| null>` | Receive a track when `autoSubscribe` is off |
+| `getStats()` | `Promise<ConnectionStats>` | Current connection quality |
+| `leave()` | `Promise<void>` | Leave the channel |
+| `on(event, listener)` | `() => void` | Listen to an event. Returns a function that removes the listener |
+
+### Host controls
+
+Only for participants whose role is `host`. They work on anyone in the channel, whichever server that person is connected to.
+
+| Method | Description |
+|---|---|
+| `muteRemoteUser(uid, kind = 'audio')` | Mute someone's microphone or camera. They can unmute themselves |
+| `setRemoteUserRole(uid, role)` | Bring someone on stage or move them to the audience. Their token must allow the role |
+| `removeRemoteUser(uid, { banSeconds? })` | Remove someone, optionally blocking them from rejoining for a while |
+| `endChannel()` | End the channel for everyone |
+
+### Properties
+
+| Property | Description |
+|---|---|
+| `connectionState` | `'disconnected'`, `'connecting'`, `'connected'` or `'reconnecting'` |
+| `uid`, `channel`, `role` | Who you are, where, and your current role |
+| `maxRole` | The highest role your token allows |
+| `remoteUsers` | Everyone else in the channel (`RemoteUser[]`) |
+| `localTracks` | What you publish |
+| `sessionExpiresAt` | Unix seconds when your token runs out, or `null` in testing mode |
+
+### `LocalTrack`
+
+| Member | Description |
+|---|---|
+| `track` | The `MediaStreamTrack` you published |
+| `kind` | `'audio'` or `'video'` |
+| `muted` | `true` while muted (by you or a host) |
+| `setMuted(muted)` | Mute or unmute; everyone else is told |
+| `close()` | Unpublish and stop the microphone or camera |
+
+### `RemoteUser` and `RemoteTrack`
+
+| Field | Description |
+|---|---|
+| `user.uid`, `user.displayName`, `user.role` | Who they are |
+| `user.audioTrack`, `user.videoTrack` | Their tracks you receive, or `null` |
+| `track.track` | The `MediaStreamTrack` to play |
+| `track.kind` | `'audio'` or `'video'` |
+| `track.muted` | `true` while the sender is muted |
+
+## Events
+
+| Event | Arguments | When |
+|---|---|---|
+| `connectionStateChanged` | `state, previous, reason?` | See the states above. `reason` when disconnected: `leave`, `kicked`, `channelEnded`, `tokenExpired`, `replaced`, `network`, `error` |
+| `userJoined` / `userLeft` | `user` | Someone joined or left. During your own reconnect, people are not reported as leaving |
+| `userUpdated` | `user` | Someone's role or name changed |
+| `trackSubscribed` / `trackUnsubscribed` | `user, track` | A remote track is ready to play, or ended |
+| `userMuted` | `user, kind, muted` | Someone muted or unmuted |
+| `volumeIndicator` | `[{ uid, level }]` | Every half second while anyone speaks; loudest first, `level` 0 to 100 |
+| `activeSpeaker` | `uid \| null` | The loudest speaker changed |
+| `networkQuality` | `{ uplink, downlink, rttMs }` | Every 2 seconds. 1 excellent, 2 good, 3 poor, 4 bad, 5 very bad, 6 down, 0 unknown |
+| `tokenWillExpire` | – | About 30 seconds before your token runs out: call `renewToken()` |
+| `tokenDidExpire` | – | The token ran out; the session ends |
+| `mutedByHost` | `kind, byUid` | A host muted you |
+| `roleChanged` | `role, byHost` | Your own role changed |
+| `exception` | `RtcError` | Something went wrong in the background (for logging) |
+
+## Reconnection
+
+When the connection to a server is lost (server failure, network change, maintenance), the SDK moves to another server by itself. It keeps your role, republishes your tracks and receives everyone again. Your app sees `reconnecting`, then `connected`, and fresh `trackSubscribed` events to attach.
+
+## Errors
+
+Every method rejects with an `RtcError` that has a stable `code`:
+
+| Code | Meaning |
+|---|---|
+| `token_required`, `invalid_token`, `token_expired` | Get a new token from your backend |
+| `wrong_app`, `wrong_channel`, `wrong_uid` | The token was made for something else |
+| `project_suspended`, `project_not_found` | Check the App ID and your account |
+| `quota_exceeded` | Your project's concurrent user or channel limit is reached |
+| `banned` | A host removed this user from the channel for a while |
+| `role_not_allowed` | The token does not allow that role |
+| `speaker_limit` | The channel already has the maximum number of speakers |
+| `not_host`, `not_publisher` | The action needs a host, or a speaker or host |
+| `network`, `timeout`, `no_edge_reachable` | Network problem; retry |

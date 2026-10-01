@@ -1,0 +1,59 @@
+{
+  "projects": [
+    {
+      "appId": "7d363d77370396cace0356c94b6aaafa",
+      "name": "Demo (testing mode)",
+      "status": "active",
+      "authMode": "appIdOnly",
+      "certificates": [],
+      "demo": true,
+      "limits": {
+        "maxConcurrentUsers": 2000,
+        "maxChannels": 500
+      },
+      "createdAt": "2026-09-30T09:46:16.160Z"
+    },
+    {
+      "appId": "4a82f2dea8129e6e44cca87876164a10",
+      "name": "Acme Chat (sample)",
+      "status": "active",
+      "authMode": "token",
+      "certificates": [
+        "495a303805db2d7d9f1a1f2d16dcc296"
+      ],
+      "limits": {
+        "maxConcurrentUsers": 1000,
+        "maxChannels": 200
+      },
+      "createdAt": "2026-09-30T09:46:16.248Z"
+    },
+    {
+      "appId": "23e9b0a03b0159e588dd048e84130897",
+      "name": "Globex Live (sample)",
+      "status": "active",
+      "authMode": "token",
+      "certificates": [
+        "cc2e73ab5bcdf4f901d0b0c4b124a6d9"
+      ],
+      "limits": {
+        "maxConcurrentUsers": 1000,
+        "maxChannels": 200
+      },
+      "createdAt": "2026-09-30T09:46:16.339Z"
+    },
+    {
+      "appId": "ea2e092917625c428b0aed93183eb623",
+      "name": "Initech Support (sample)",
+      "status": "active",
+      "authMode": "token",
+      "certificates": [
+        "d16156de77dfcebbbfa5ee3fc60c623c"
+      ],
+      "limits": {
+        "maxConcurrentUsers": 5,
+        "maxChannels": 2
+      },
+      "createdAt": "2026-09-30T09:46:16.470Z"
+    }
+  ]
+}

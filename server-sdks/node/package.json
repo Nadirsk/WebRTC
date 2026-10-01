@@ -1,0 +1,8 @@
+{
+  "name": "@nadir-network/server-sdk",
+  "version": "1.0.0-beta.1",
+  "private": true,
+  "type": "module",
+  "description": "Server SDK for Node.js: access token builder.",
+  "main": "src/index.ts"
+}

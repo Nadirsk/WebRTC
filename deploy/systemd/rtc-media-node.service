@@ -1,0 +1,24 @@
+[Unit]
+Description=Nadir Network Communication media node (mediasoup SFU + signaling)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=rtc
+Group=rtc
+WorkingDirectory=/opt/rtc-platform
+EnvironmentFile=/opt/rtc-platform/.env
+ExecStart=/usr/bin/node media-node/dist/index.js
+# A dead mediasoup worker makes the process exit on purpose; systemd brings it straight back.
+Restart=always
+RestartSec=2
+LimitNOFILE=1048576
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,39 @@
+{
+  "name": "nadir-network-platform",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Nadir Network Communication: WebRTC real-time voice and video platform (CPaaS).",
+  "workspaces": [
+    "media-node",
+    "orchestrator",
+    "allocator",
+    "sdk-core",
+    "sdk-web",
+    "sdk-react-native",
+    "web-client",
+    "website",
+    "console",
+    "tools/loadtest"
+  ],
+  "scripts": {
+    "build": "npm run build -w web-client && npm run build -w media-node && npm run build -w orchestrator && npm run build -w allocator",
+    "cluster": "node tools/dev-cluster.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test:unit": "node --import tsx --test tests/*.test.ts",
+    "test:p1": "node tools/p1/run-all.mjs",
+    "loadtest": "npm run start -w tools/loadtest --",
+    "sdk:build": "npm run build -w sdk-web && npm run build -w sdk-react-native",
+    "website:dev": "npm run dev -w website",
+    "website:build": "npm run build -w website",
+    "console:dev": "npm run dev -w console"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

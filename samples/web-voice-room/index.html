@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voice room sample</title>
+  <link rel="stylesheet" href="../sample.css">
+</head>
+<body>
+<main>
+  <h1>Voice room</h1>
+  <form id="join">
+    <label>Room <input id="channel" value="lounge" required pattern="[A-Za-z0-9_.\-]{1,64}"></label>
+    <label>Your name <input id="name" value="Guest" required></label>
+    <label>Join as
+      <select id="role">
+        <option value="host">Host (moderate)</option>
+        <option value="speaker">Speaker</option>
+        <option value="audience" selected>Audience</option>
+      </select>
+    </label>
+    <button>Join</button>
+  </form>
+  <section id="room" hidden>
+    <p><strong id="me"></strong> · <span id="state"></span></p>
+    <p><button id="mute" hidden>Mute</button> <button id="end" hidden>End room</button> <button id="leave">Leave</button></p>
+    <h2>In the room</h2>
+    <ul id="people"></ul>
+  </section>
+</main>
+<script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+export const metadata = { title: 'Rooms, roles and tracks' };
+
+# Rooms, roles and tracks
+
+## Rooms
+
+A room is a conversation. Everyone who joins the same channel name can hear (and see) each other. Rooms are created when the first person joins and closed when the last one leaves; there is nothing to set up in advance.
+
+Within your project, a channel name is unique. The same name in another customer's project is a different room: rooms are always kept apart by App ID.
+
+## Roles
+
+| Role | Can publish audio and video | Typical use |
+|---|---|---|
+| `host` | Yes | The person running a room or show |
+| `speaker` | Yes | People on stage, or both sides of a call |
+| `audience` | No, listen only | Large listening audiences |
+
+Listeners never send media, so a room can hold far more of them than speakers. Move someone between roles with `client.setRole()`. Switching to `audience` stops everything that person was publishing.
+
+The access token sets the highest role a person may take; they can join lower and step up later. Hosts can also manage others: mute them, bring them on stage or move them off it, remove them (optionally for a while), or end the room for everyone. See [Tokens](/docs/tokens) and the host controls in the [Client API reference](/docs/client-api).
+
+## Large rooms
+
+A room is not limited to one server. When the server hosting a room fills up, new participants join another server and the two servers pass each speaker's audio between them, so everyone still hears everyone. If a server fails, everyone on it moves to another server by themselves, usually within a second.
+
+> In the preview any participant may change their own role. From the beta, the token your server issues decides which roles a user is allowed.
+
+## Tracks
+
+A track is one stream of media: a microphone, a camera or a screen.
+
+- **Publishing** sends one of your tracks to the room. Only hosts and speakers can publish.
+- **Receiving** happens automatically: when someone publishes, everyone else gets a `trackAdded` event with the remote track.
+- **Pausing** a published track (mute) stops sending it and tells everyone, who get `trackPaused`. Resume with `resume()`.
+
+## Connections
+
+The SDK keeps one signaling connection and up to two media connections per participant (one for sending, one for receiving). If the network changes, for example from Wi-Fi to mobile data, the SDK restarts the media connection by itself and reports it through `connectionStateChanged`.
+
+## Minutes and billing
+
+A participant-minute is one person in a room for one minute, whatever their role. See [pricing](/pricing).

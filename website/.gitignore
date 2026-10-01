@@ -1,0 +1,6 @@
+.next/
+next-env.d.ts
+*.tsbuildinfo
+# Beta sign-ups and sales enquiries collected in development
+data/
+.env*.local

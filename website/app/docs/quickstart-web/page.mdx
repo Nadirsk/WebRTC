@@ -1,0 +1,127 @@
+export const metadata = { title: 'Web quick start' };
+
+# Web quick start
+
+Build a page where people join a voice room, talk, and see who is speaking. About 40 lines of code.
+
+## 1. Install
+
+```bash
+npm install @nadir-network/web
+```
+
+## 2. Get a token from your backend
+
+Every user needs a short-lived token that your server signs with your App Certificate. Add one endpoint to your backend (see [Tokens](/docs/tokens) for Node, PHP and Python):
+
+```ts
+// Your server
+import { buildToken } from '@nadir-network/server-sdk';
+
+app.post('/api/rtc-token', requireLogin, (req, res) => {
+  const token = buildToken({
+    appId: process.env.APP_ID,
+    appCertificate: process.env.APP_CERTIFICATE,
+    channel: req.body.channel,
+    uid: req.user.id,
+    role: 'speaker',
+    expireSeconds: 3600,
+  });
+  res.json({ token });
+});
+```
+
+While you build, you can skip this step: a project in **testing mode** accepts joins with only the App ID. Switch testing mode off before you launch.
+
+## 3. Join
+
+```ts
+import { createClient } from '@nadir-network/web';
+
+const client = createClient({ appId: 'YOUR_APP_ID', allocatorUrl: 'https://api.nadir-network.example' });
+const { token } = await fetch('/api/rtc-token', {
+  method: 'POST',
+  body: JSON.stringify({ channel: 'team-standup' }),
+}).then((r) => r.json());
+
+await client.join({
+  channel: 'team-standup',
+  uid: currentUser.id,
+  token,
+  displayName: currentUser.name,
+  role: 'speaker', // or 'audience' to listen only
+});
+```
+
+Everyone who joins `team-standup` in your project is in the same channel. Channel names and user IDs are 1 to 64 letters, digits, `_`, `-` or `.`.
+
+## 4. Play what others send
+
+```ts
+import { playRemoteAudio } from '@nadir-network/web';
+
+const players = new Map();
+client.on('trackSubscribed', (user, track) => {
+  if (track.kind === 'audio') players.set(user.uid, playRemoteAudio(track));
+});
+client.on('trackUnsubscribed', (user) => {
+  players.get(user.uid)?.remove();
+  players.delete(user.uid);
+});
+```
+
+Browsers only play sound after the user has interacted with the page, so call `join()` from a button click.
+
+## 5. Talk
+
+```ts
+import { createMicrophoneTrack } from '@nadir-network/web';
+
+const mic = await client.publish(await createMicrophoneTrack());
+muteButton.onclick = () => mic.setMuted(!mic.muted);
+```
+
+## 6. Show who is speaking
+
+```ts
+client.on('activeSpeaker', (uid) => {
+  for (const tile of document.querySelectorAll('[data-uid]')) {
+    tile.classList.toggle('speaking', tile.dataset.uid === uid);
+  }
+});
+```
+
+## 7. Keep the session going
+
+Tokens expire. Renew before they do; the SDK warns you about 30 seconds ahead:
+
+```ts
+client.on('tokenWillExpire', async () => {
+  const { token } = await fetch('/api/rtc-token', {
+    method: 'POST',
+    body: JSON.stringify({ channel: 'team-standup' }),
+  }).then((r) => r.json());
+  await client.renewToken(token);
+});
+```
+
+If a server fails or the network drops, the SDK moves to another server by itself and republishes your microphone. Show it in your UI:
+
+```ts
+client.on('connectionStateChanged', (state, _previous, reason) => {
+  banner.hidden = state !== 'reconnecting';
+  if (state === 'disconnected' && reason === 'kicked') alert('A host removed you from the room');
+});
+```
+
+## 8. Leave
+
+```ts
+mic.track.stop();
+await client.leave();
+```
+
+## Next
+
+- [Rooms, roles and tracks](/docs/concepts) explains hosts, speakers and listeners.
+- [Client API reference](/docs/client-api) lists every option, method and event.

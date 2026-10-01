@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "RTC PoC",
+    "slug": "rtc-poc",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rtcplatform.poc",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "The microphone is used to talk in test calls.",
+        "NSCameraUsageDescription": "The camera is used for video in test calls."
+      }
+    },
+    "android": {
+      "package": "com.rtcplatform.poc",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "@config-plugins/react-native-webrtc",
+        {
+          "microphonePermission": "The microphone is used to talk in test calls.",
+          "cameraPermission": "The camera is used for video in test calls."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ]
+  }
+}

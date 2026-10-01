@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voice room · Nadir Network Communication</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main>
+  <header class="top">
+    <span class="tag">Phase 1</span>
+    <h1>Voice room</h1>
+    <nav><a href="/">All tools</a><a href="/latency.html">Latency test</a></nav>
+  </header>
+
+  <section class="panel" id="join-panel">
+    <h2>Join a room</h2>
+    <form id="join-form" class="form">
+      <label>Room ID <input id="room-id" name="room" required pattern="[A-Za-z0-9_.\-]{1,64}" autocomplete="off"></label>
+      <label>Your name <input id="display-name" name="name" required maxlength="64" autocomplete="off"></label>
+      <label>Role
+        <select id="role" name="role">
+          <option value="speaker">Speaker (talk and listen)</option>
+          <option value="host">Host</option>
+          <option value="audience">Listener (listen only)</option>
+        </select>
+      </label>
+      <label>Access point (allocator) <input id="allocator-url" name="allocator" required autocomplete="off"></label>
+      <label>App ID <input id="app-id" name="appId" required pattern="[a-f0-9]{32}" autocomplete="off"></label>
+      <label>Access token <input id="token" name="token" autocomplete="off" placeholder="Leave empty for testing-mode projects"></label>
+      <label class="check"><input type="checkbox" id="use-tone"> Send a test tone instead of the microphone</label>
+      <label class="check"><input type="checkbox" id="force-relay"> Force TURN relay (test strict networks)</label>
+      <div class="actions"><button type="submit" class="primary" id="join-btn">Join room</button></div>
+    </form>
+    <p class="error" id="join-error" hidden></p>
+    <p class="hint">Share the link after joining: it includes the room ID, so the other person only needs to press Join.</p>
+  </section>
+
+  <section id="room-panel" hidden>
+    <div class="layout">
+      <div class="panel">
+        <div class="actions">
+          <h2 id="room-title">Room</h2>
+          <span class="pill" id="state-pill">new</span>
+          <span class="pill" id="role-pill">role</span>
+          <span class="pill" id="node-pill" title="Media node">–</span>
+        </div>
+        <div class="actions">
+          <button id="mic-btn" type="button">Turn mic on</button>
+          <button id="cam-btn" type="button">Turn camera on</button>
+          <button id="stage-btn" type="button">Go on stage</button>
+          <button id="copy-btn" type="button">Copy room link</button>
+          <button id="end-btn" type="button" class="danger" hidden>End room for everyone</button>
+          <button id="leave-btn" type="button" class="danger">Leave</button>
+        </div>
+        <p class="error" id="room-error" hidden></p>
+        <div class="tiles" id="tiles"></div>
+      </div>
+
+      <aside class="panel">
+        <h2>Connection</h2>
+        <table class="stats">
+          <tbody>
+            <tr><td>Network quality</td><td id="st-quality">–</td></tr>
+            <tr><td>Round trip to server</td><td id="st-rtt">–</td></tr>
+            <tr><td>Route</td><td id="st-path">–</td></tr>
+            <tr><td>Receiving</td><td id="st-in">–</td></tr>
+            <tr><td>Packet loss (receiving)</td><td id="st-in-loss">–</td></tr>
+            <tr><td>Jitter</td><td id="st-jitter">–</td></tr>
+            <tr><td>Sending</td><td id="st-out">–</td></tr>
+            <tr><td>Packet loss (sending)</td><td id="st-out-loss">–</td></tr>
+          </tbody>
+        </table>
+        <h2>Events</h2>
+        <ul class="log" id="log"></ul>
+      </aside>
+    </div>
+  </section>
+  <div id="audio-sink" hidden></div>
+</main>
+<script type="module" src="/js/room.js"></script>
+</body>
+</html>

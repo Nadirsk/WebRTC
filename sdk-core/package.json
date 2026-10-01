@@ -1,0 +1,11 @@
+{
+  "name": "@nadir-network/sdk-core",
+  "version": "1.0.0-beta.1",
+  "private": true,
+  "type": "module",
+  "description": "Platform-independent client SDK: allocation, signaling, publish/subscribe, reconnect, quality.",
+  "main": "src/index.ts",
+  "dependencies": {
+    "mediasoup-client": "^3.24.1"
+  }
+}

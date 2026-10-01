@@ -1,0 +1,88 @@
+export const metadata = { title: 'React Native quick start' };
+
+# React Native quick start
+
+The React Native SDK uses the same API as the web SDK. It runs on `react-native-webrtc`, so it needs a development build rather than Expo Go.
+
+## 1. Install
+
+```bash
+npx expo install react-native-webrtc @config-plugins/react-native-webrtc
+npm install @nadir-network/react-native
+```
+
+Add the plugin to `app.json` so the build asks for the microphone:
+
+```json
+{
+  "expo": {
+    "plugins": [
+      ["@config-plugins/react-native-webrtc", {
+        "microphonePermission": "Used to talk in calls."
+      }]
+    ]
+  }
+}
+```
+
+Then create a development build with `npx expo run:android` or `npx expo run:ios`.
+
+## 2. Register WebRTC first
+
+Put this in its own file and import it before anything else in your entry file:
+
+```ts
+// globals.ts
+import { registerGlobals } from 'react-native-webrtc';
+registerGlobals();
+```
+
+```ts
+// index.ts
+import './globals';
+import { registerRootComponent } from 'expo';
+import App from './App';
+
+registerRootComponent(App);
+```
+
+## 3. Join and talk
+
+```tsx
+import { createClient, createMicrophoneTrack } from '@nadir-network/react-native';
+
+const client = createClient({ appId: 'YOUR_APP_ID', allocatorUrl: 'https://api.nadir-network.example' });
+const { token } = await fetch('https://your-backend.example.com/api/rtc-token', {
+  method: 'POST',
+  body: JSON.stringify({ channel: 'team-standup' }),
+}).then((r) => r.json());
+
+await client.join({ channel: 'team-standup', uid: user.id, token, displayName: 'Bilal', role: 'speaker' });
+const mic = await client.publish(await createMicrophoneTrack());
+```
+
+Remote audio plays automatically when it arrives; you don't need an audio element on mobile. See [Tokens](/docs/tokens) for the backend endpoint.
+
+## 4. React to the room
+
+```tsx
+const [people, setPeople] = useState([]);
+
+useEffect(() => {
+  const refresh = () => setPeople([...client.remoteUsers]);
+  const off = [
+    client.on('userJoined', refresh),
+    client.on('userLeft', refresh),
+    client.on('userUpdated', refresh),
+    client.on('tokenWillExpire', async () => client.renewToken(await fetchToken())),
+  ];
+  return () => off.forEach((unsubscribe) => unsubscribe());
+}, []);
+```
+
+Every `client.on()` returns a function that removes the listener, which fits neatly into `useEffect` cleanup. When the phone switches between Wi-Fi and mobile data, the SDK reconnects by itself.
+
+## Next
+
+- [Client API reference](/docs/client-api)
+- [Limits and quality](/docs/limits)

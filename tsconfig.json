@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "types": [
+      "node"
+    ],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "include": [
+    "protocol/**/*.ts",
+    "shared/**/*.ts",
+    "media-node/src/**/*.ts",
+    "orchestrator/src/**/*.ts",
+    "allocator/src/**/*.ts",
+    "sdk-core/src/**/*.ts",
+    "sdk-web/src/**/*.ts",
+    "sdk-react-native/src/**/*.ts",
+    "web-client/src/**/*.ts",
+    "server-sdks/node/src/**/*.ts",
+    "samples/token-server/**/*.ts",
+    "samples/web-voice-room/**/*.ts",
+    "samples/web-1to1-call/**/*.ts",
+    "tests/**/*.ts"
+  ]
+}

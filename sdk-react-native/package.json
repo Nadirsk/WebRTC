@@ -1,0 +1,21 @@
+{
+  "name": "@nadir-network/react-native",
+  "version": "1.0.0-beta.1",
+  "private": true,
+  "type": "module",
+  "description": "React Native SDK: real-time voice and video with react-native-webrtc.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node ../sdk-web/build.mjs --entry src/index.ts --out dist"
+  },
+  "dependencies": {
+    "mediasoup-client": "^3.24.1"
+  },
+  "peerDependencies": {
+    "react-native-webrtc": ">=124.0.0"
+  }
+}

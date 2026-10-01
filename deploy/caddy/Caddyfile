@@ -1,0 +1,7 @@
+# Caddy terminates TLS (automatic Let's Encrypt certificates) and forwards HTTPS + WSS to the media node.
+# Install to /etc/caddy/Caddyfile and replace the domain.
+
+edge1.example.com {
+	encode gzip
+	reverse_proxy 127.0.0.1:3000
+}

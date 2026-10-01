@@ -1,0 +1,8 @@
+{
+  "name": "nadir-network/server-sdk",
+  "description": "Nadir Network Communication server SDK for PHP: access token builder.",
+  "type": "library",
+  "license": "proprietary",
+  "require": { "php": ">=7.4" },
+  "autoload": { "psr-4": { "NadirNetwork\ServerSdk\\": "src/" } }
+}

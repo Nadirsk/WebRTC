@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Latency test · Nadir Network Communication</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main>
+  <header class="top">
+    <span class="tag">Phase 0</span>
+    <h1>Latency test</h1>
+    <nav><a href="/">All tools</a><a href="/room.html">Voice room</a></nav>
+  </header>
+
+  <section class="panel">
+    <p class="hint">This page joins a private room twice: one connection sends short beeps, the other listens. It times each beep from the moment it is created until it is heard back, through the media server. Run it from the phone or network you want to test.</p>
+    <form id="form" class="form">
+      <label>Access point (allocator) <input id="allocator-url" required autocomplete="off"></label>
+      <label>App ID (testing mode) <input id="app-id" required pattern="[a-f0-9]{32}" autocomplete="off"></label>
+      <label>Beeps <input id="count" type="number" min="5" max="500" value="30"></label>
+      <label>Seconds between beeps <input id="interval" type="number" min="0.3" max="5" step="0.1" value="1"></label>
+      <label class="check"><input type="checkbox" id="force-relay"> Force TURN relay</label>
+      <div class="actions">
+        <button type="submit" class="primary" id="start-btn">Start test</button>
+        <button type="button" id="stop-btn" disabled>Stop</button>
+      </div>
+    </form>
+    <p class="error" id="error" hidden></p>
+  </section>
+
+  <section class="panel">
+    <div class="actions"><h2>Results</h2><span class="pill" id="status">idle</span></div>
+    <div class="kpis">
+      <div class="kpi"><span class="label">Median delay</span><span class="value" id="k-median">–</span></div>
+      <div class="kpi"><span class="label">95th percentile</span><span class="value" id="k-p95">–</span></div>
+      <div class="kpi"><span class="label">Fastest / slowest</span><span class="value" id="k-range">–</span></div>
+      <div class="kpi"><span class="label">Beeps heard</span><span class="value" id="k-heard">–</span></div>
+      <div class="kpi"><span class="label">Round trip to server</span><span class="value" id="k-rtt">–</span></div>
+      <div class="kpi"><span class="label">Route</span><span class="value" id="k-path">–</span></div>
+    </div>
+    <p class="hint">What this covers: audio encoding, the trip to the server and back, the server, the receiver's jitter buffer and decoding. A real conversation also adds the phone's microphone and speaker delay, usually a few tens of milliseconds. P0 target: under 300 ms end to end on 4G.</p>
+    <ul class="log" id="log"></ul>
+  </section>
+</main>
+<script type="module" src="/js/latency.js"></script>
+</body>
+</html>

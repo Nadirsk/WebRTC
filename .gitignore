@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+*.log
+tools/loadtest/results/
+certs/
+data/
+samples/token-server/public/voice-room/
+samples/token-server/public/call/
+sdk-web/dist/
+sdk-react-native/dist/

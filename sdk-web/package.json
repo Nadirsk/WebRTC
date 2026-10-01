@@ -1,0 +1,19 @@
+{
+  "name": "@nadir-network/web",
+  "version": "1.0.0-beta.1",
+  "private": true,
+  "type": "module",
+  "description": "Web SDK: real-time voice and video in the browser.",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "mediasoup-client": "^3.24.1"
+  }
+}

@@ -1,0 +1,29 @@
+export const metadata = { title: 'Limits and quality' };
+
+# Limits and quality
+
+## Limits
+
+| Limit | Value |
+|---|---|
+| Speakers (hosts and speakers) per room | 16 by default, raised on request |
+| Participants per room | 5,000 per room in the preview |
+| Published tracks per participant | 3 (for example microphone, camera and screen) |
+| Channel name and uid | 1–64 characters: letters, digits, `_`, `-`, `.` |
+| Token lifetime | Up to 24 hours |
+| Concurrent users and channels | Per project; raised on request |
+| Display name | 1–64 characters |
+
+## How audio quality is protected
+
+| Problem on the network | What happens |
+|---|---|
+| A packet is lost | Opus error correction rebuilds it from the next packet; if more are lost, the receiver asks for a resend |
+| Packets arrive unevenly | A jitter buffer on the receiver smooths them out |
+| Someone stops talking | Their app stops sending audio (silence suppression), saving data |
+| The network blocks normal call traffic | Media falls back to TCP, then to a TURN relay on port 443 |
+| The network changes (Wi-Fi to 4G) | The SDK restarts the media connection by itself |
+
+## Checking quality in your app
+
+Call `getStats()` every couple of seconds and show a warning when `inbound.lossPercent` goes above about 10% or `rttMs` above about 400. A per-call quality timeline (Call Inspector) comes to the console with the beta.

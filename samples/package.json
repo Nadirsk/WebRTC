@@ -1,0 +1,11 @@
+{
+  "name": "@nadir-network/samples",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sample backend (token endpoint) and sample apps built on the SDKs.",
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node --import tsx token-server/server.ts"
+  }
+}

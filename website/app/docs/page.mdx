@@ -1,0 +1,30 @@
+export const metadata = { title: 'Documentation' };
+
+# Documentation
+
+Add real-time voice and video to your app. You join people into a **room**, they **publish** their microphone or camera, and everyone else in the room receives it. Our servers do the routing.
+
+> **Preview.** The SDK works today against our media servers, and the API described here is what you build on. Names may still change before general availability. Join tokens and the console arrive with the beta.
+
+## Start here
+
+| If you want to | Read |
+|---|---|
+| Get a voice room running in a web page | [Web quick start](/docs/quickstart-web) |
+| Add calls to an Android or iOS app | [React Native quick start](/docs/quickstart-react-native) |
+| Understand rooms, roles and tracks | [Rooms, roles and tracks](/docs/concepts) |
+| See every method and event | [Client API reference](/docs/client-api) |
+| Know the limits and how quality is protected | [Limits and quality](/docs/limits) |
+| Build an SDK for another platform | [Signaling protocol](/docs/signaling) |
+
+## How a call works
+
+1. Your server decides a user may join a room and gives the app a token (from the beta onward).
+2. The app calls `join()`. The SDK connects to the nearest healthy server.
+3. Speakers call `publish()` with a microphone or camera track. Their audio goes up once.
+4. Everyone else in the room gets a `trackAdded` event and hears it. The server makes the copies.
+5. Minutes are counted per person from join to leave, and billed per 1,000.
+
+## Try it without writing code
+
+Open the [live demo](/demo) in two browser tabs or on two phones, join the same room, and talk.

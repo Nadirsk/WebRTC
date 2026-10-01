@@ -1,0 +1,82 @@
+export const metadata = { title: 'Signaling protocol' };
+
+# Signaling protocol
+
+You only need this page to build an SDK for a platform we don't support yet. The official SDKs speak this protocol for you.
+
+Joining takes two steps: an HTTPS call to the access point, which chooses a media server and hands out a short-lived ticket, then a WebSocket to that media server. Media itself flows over WebRTC.
+
+## 1. Allocate
+
+```
+POST https://api.nadir-network.example/v1/allocate
+{ "appId": "…", "channel": "room-1", "token": "…" }
+```
+
+The response lists up to three media servers, best first, and an edge ticket valid for two minutes:
+
+```json
+{
+  "edges": [{ "nodeId": "dxb-2", "region": "dxb", "url": "wss://dxb-2.edge.nadir-network.example/ws" }, "…"],
+  "ticket": "…",
+  "uid": "alice",
+  "channel": "room-1",
+  "maxRole": "speaker",
+  "sessionExpiresAt": 1790003600
+}
+```
+
+Try the servers in order. When reconnecting after a failure, add `"exclude": ["dxb-2"]` so the failed server is not offered again. Testing-mode projects send `uid` and `role` instead of `token`. Errors come back as `{ "error": { "code": "token_expired", "message": "…" } }`.
+
+`POST /v1/renew` with a new token returns a new ticket for a session that is already connected.
+
+## 2. Messages on the WebSocket
+
+| Kind | Direction | Shape |
+|---|---|---|
+| Request | client to server | `{ "id": 7, "method": "join", "data": { ... } }` |
+| Response | server to client | `{ "id": 7, "ok": true, "data": { ... } }` or `{ "id": 7, "ok": false, "error": "...", "code": "..." }` |
+| Notification | server to client | `{ "notification": true, "method": "peerJoined", "data": { ... } }` |
+
+Send `ping` every few seconds; treat two missed answers as a lost server and reconnect.
+
+## Join sequence
+
+1. `connect { protocolVersion: 2, ticket }` returns the codecs, your `uid`, the server's `nodeId` and your `maxRole`.
+2. `join { displayName, role, rtpCapabilities }` returns the people and tracks already in the channel, TURN servers and `sessionExpiresAt`.
+3. `createWebRtcTransport { direction: "recv" }` returns the parameters for the receiving connection.
+4. For each track: `consume { transportId, producerId }`, then `resumeConsumer { consumerId }`.
+5. When the connection first sends media: `connectTransport { transportId, dtlsParameters }`.
+
+To publish: `createWebRtcTransport { direction: "send" }`, then `produce { transportId, kind, rtpParameters }`.
+
+## Requests
+
+| Method | Purpose |
+|---|---|
+| `connect` | First call: present the ticket, check the protocol version |
+| `join` | Enter the channel |
+| `createWebRtcTransport`, `connectTransport` | Open a send or receive media connection |
+| `restartIce` | Recover a media connection after a network change |
+| `produce`, `closeProducer`, `pauseProducer`, `resumeProducer` | Publish, stop, mute and unmute a track |
+| `consume`, `resumeConsumer` | Receive a track |
+| `setRole` | Change role, up to `maxRole` |
+| `renewTicket` | Present a ticket from `/v1/renew` before the token expires |
+| `reportStats` | Upload quality figures (delay, loss, jitter, bitrate) |
+| `ping` | Liveness check |
+| `muteParticipant`, `setParticipantRole`, `removeParticipant`, `endChannel` | Host controls |
+| `leave` | Leave the channel |
+
+## Notifications
+
+| Notification | Meaning |
+|---|---|
+| `peerJoined`, `peerLeft`, `peerRoleChanged` | People coming, going and changing role |
+| `newProducer`, `producerPaused`, `producerResumed`, `producerClosed`, `consumerClosed` | Tracks |
+| `audioLevels` | Loudest speakers, twice a second |
+| `mutedByHost`, `roleChangedByHost` | A host acted on you |
+| `tokenWillExpire` | Renew now |
+| `removed` | Your session is over (`kicked`, `channelEnded`, `tokenExpired`, `replaced`); the socket closes next |
+| `reconnectRequired` | The server is going down for maintenance: allocate again and move |
+
+The protocol is versioned. The current version is `2`; the server rejects other versions with the code `unsupported_protocol`.

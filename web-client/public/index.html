@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nadir Network Communication · test tools</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main>
+  <header class="top">
+    <span class="tag">Phase 1 · local cluster</span>
+    <h1>Nadir Network Communication test tools</h1>
+  </header>
+
+  <p class="hint">Tools for checking voice quality, cascading and failover on the local cluster (allocator on port 4100). Open the same room on two devices to talk.</p>
+
+  <div class="cards">
+    <a class="panel card" href="/room.html">
+      <h2>Voice room</h2>
+      <p class="hint">Join as host, speaker or listener. Live stats for delay, packet loss and jitter. Camera is optional.</p>
+    </a>
+    <a class="panel card" href="/latency.html">
+      <h2>Latency test</h2>
+      <p class="hint">Sends beeps through the server and back, and measures how long they take. No microphone needed.</p>
+    </a>
+    <a class="panel card" href="/loadtest.html">
+      <h2>Load test page</h2>
+      <p class="hint">Opens many listeners in one browser tab. Driven by the command-line load tester for server capacity runs.</p>
+    </a>
+    <a class="panel card" href="/api/stats">
+      <h2>Server stats</h2>
+      <p class="hint">JSON: rooms, peers, and CPU per mediasoup worker.</p>
+    </a>
+  </div>
+</main>
+</body>
+</html>

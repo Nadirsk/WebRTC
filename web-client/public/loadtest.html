@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Load test · Nadir Network Communication</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main>
+  <header class="top">
+    <span class="tag">Phase 0</span>
+    <h1>Load test page</h1>
+    <nav><a href="/">All tools</a></nav>
+  </header>
+
+  <section class="panel">
+    <p class="hint">Opens many listener connections from this one tab. Normally the command-line tester (<code>npm run loadtest</code>) opens several of these tabs; you can also use it by hand with URL options: <code>?room=load1&amp;listeners=20&amp;speaker=1</code>.</p>
+    <div class="kpis">
+      <div class="kpi"><span class="label">Room</span><span class="value" id="k-room">–</span></div>
+      <div class="kpi"><span class="label">Connected listeners</span><span class="value" id="k-connected">0</span></div>
+      <div class="kpi"><span class="label">Failed to join</span><span class="value" id="k-failed">0</span></div>
+      <div class="kpi"><span class="label">Avg packet loss</span><span class="value" id="k-loss">–</span></div>
+      <div class="kpi"><span class="label">Avg jitter</span><span class="value" id="k-jitter">–</span></div>
+      <div class="kpi"><span class="label">Listeners receiving audio</span><span class="value" id="k-receiving">–</span></div>
+    </div>
+    <ul class="log" id="log"></ul>
+  </section>
+</main>
+<script type="module" src="/js/loadtest.js"></script>
+</body>
+</html>

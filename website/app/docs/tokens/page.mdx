@@ -1,0 +1,88 @@
+export const metadata = { title: 'Tokens' };
+
+# Tokens
+
+A token proves that your backend allowed a user into a channel. Your server makes it with your **App Certificate**; the app passes it to `join()`. The certificate never leaves your server.
+
+## What a token says
+
+| Field | Meaning |
+|---|---|
+| App ID | Your project |
+| Channel | The one channel it opens |
+| uid | The user it belongs to |
+| Role | The highest role allowed: `host` (can moderate), `speaker` (can talk), `audience` (listens) |
+| Expiry | Up to 24 hours. One hour is a good default |
+
+The role is a ceiling. Someone with a `speaker` token can join as audience and step up later; someone with an `audience` token can never talk, even if a host invites them. For voice rooms, give listeners a `speaker` token so hosts can bring them on stage.
+
+## Make tokens on your server
+
+Only issue a token after your own login check, and choose the role from your own rules.
+
+### Node.js
+
+```ts
+import { buildToken } from '@nadir-network/server-sdk';
+
+const token = buildToken({
+  appId: process.env.APP_ID,
+  appCertificate: process.env.APP_CERTIFICATE,
+  channel: 'room-1',
+  uid: user.id,
+  role: 'speaker',
+  expireSeconds: 3600,
+});
+```
+
+### PHP
+
+```php
+use NadirNetwork\ServerSdk\TokenBuilder;
+
+$token = TokenBuilder::build(
+    getenv('APP_ID'),
+    getenv('APP_CERTIFICATE'),
+    'room-1',
+    (string) $user->id,
+    TokenBuilder::ROLE_SPEAKER,
+    3600
+);
+```
+
+### Python
+
+```python
+from nadir_network_token import build_token
+
+token = build_token(
+    app_id=os.environ["APP_ID"],
+    app_certificate=os.environ["APP_CERTIFICATE"],
+    channel="room-1",
+    uid=str(user.id),
+    role="speaker",
+    expire_seconds=3600,
+)
+```
+
+## Renew before it expires
+
+About 30 seconds before expiry the SDK fires `tokenWillExpire`. Fetch a new token and call `renewToken()`; the call continues without a break. If you do not, the session ends with reason `tokenExpired`.
+
+## Rotate the certificate
+
+You can hold two certificates at once. Add a new primary, deploy it to your servers, then remove the old one. Tokens signed with either are accepted in between, so no one is disconnected.
+
+## Testing mode
+
+A project in testing mode accepts joins with only the App ID and any uid, and every role is allowed. Use it while you build; anyone who knows the App ID can join, so turn it off before launch.
+
+## Format
+
+Tokens are JSON Web Tokens signed with HMAC-SHA256, so you can make them in any language:
+
+```
+header  { "alg": "HS256", "typ": "JWT" }
+payload { "v": 1, "appId": "…", "channel": "room-1", "uid": "alice", "role": "speaker", "iat": 1790000000, "exp": 1790003600 }
+key     your App Certificate (as text)
+```

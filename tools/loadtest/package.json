@@ -1,0 +1,13 @@
+{
+  "name": "@nadir-network/loadtest",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Opens headless Chrome tabs full of listeners against a media node and records server CPU and client quality.",
+  "scripts": {
+    "start": "node run.mjs"
+  },
+  "dependencies": {
+    "puppeteer-core": "^25.12.0"
+  }
+}

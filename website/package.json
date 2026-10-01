@@ -1,0 +1,30 @@
+{
+  "name": "@nadir-network/website",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Public website: products, solutions, network, pricing, docs, live demo, beta sign-up.",
+  "scripts": {
+    "dev": "next dev --port 3100",
+    "build": "next build",
+    "start": "next start --port 3100",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mdx-js/loader": "^3.1.1",
+    "@mdx-js/react": "^3.1.1",
+    "@next/mdx": "^16.3.7",
+    "@shikijs/rehype": "^4.4.3",
+    "mediasoup-client": "^3.24.1",
+    "motion": "^13.4.6",
+    "next": "^16.3.7",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "remark-gfm": "^4.0.1",
+    "shiki": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/mdx": "^2.0.14",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0"
+  }
+}

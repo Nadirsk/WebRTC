@@ -1,0 +1,20 @@
+{
+  "name": "@nadir-network/media-node",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Edge media server: mediasoup SFU + WebSocket signaling.",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch --env-file-if-exists=../.env src/index.ts",
+    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --target=node22 --packages=external --outfile=dist/index.js",
+    "start": "node --env-file-if-exists=../.env dist/index.js"
+  },
+  "dependencies": {
+    "mediasoup": "^3.27.1",
+    "ws": "^8.22.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.2"
+  }
+}
